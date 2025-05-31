@@ -1,27 +1,38 @@
-name: CI for Static Website
+name: Build and Upload to S3
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  build:
-    name: Validate Static Site
+  build-and-upload:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Print file structure
-        run: ls -R
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
 
-      - name: Basic HTML Lint (optional)
-        run: |
-          echo "No formal build step. Just simulating a simple CI process."
-          echo "You can add link checks or HTML validation later."
+    - name: Install dependencies
+      run: npm install
 
-      - name: Success message
-        run: echo "Site is ready for deployment!"
+    - name: Build the project
+      run: npm run build
+
+    - name: Zip build directory
+      run: |
+        cd build
+        zip -r ../build.zip .
+        cd ..
+
+    - name: Upload to S3
+      uses: aws-actions/aws-cli-action@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+        args: s3 cp build.zip s3://dva-artifacts-bucket/frontend/build/build.zip --acl private
