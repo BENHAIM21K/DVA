@@ -1,0 +1,27 @@
+name: CI for Static Website
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Validate Static Site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Print file structure
+        run: ls -R
+
+      - name: Basic HTML Lint (optional)
+        run: |
+          echo "No formal build step. Just simulating a simple CI process."
+          echo "You can add link checks or HTML validation later."
+
+      - name: Success message
+        run: echo "Site is ready for deployment!"

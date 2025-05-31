@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Submit an Issue</title>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: Arial;
+      padding: 40px;
+      background-color: #f4f4f4;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    input, textarea, select {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Submit a Tech Issue</h2>
+<form id="issueForm">
+  <label for="title">Issue Title</label>
+  <input type="text" id="title" name="title" required>
+
+  <label for="description">Description</label>
+  <textarea id="description" name="description" required></textarea>
+
+  <label for="severity">Severity</label>
+  <select id="severity" name="severity" required>
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+    <option value="critical">Critical</option>
+  </select>
+
+  <button type="submit">Submit</button>
+  <p id="response" class=""></p>
+</form>
+
+<script>
+  const form = document.getElementById('issueForm');
+  const responseEl = document.getElementById('response');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      title: form.title.value,
+      description: form.description.value,
+      severity: form.severity.value
+    };
+
+    try {
+      const res = await fetch('https://your-api-url.amazonaws.com/report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        responseEl.textContent = "Issue submitted successfully!";
+        responseEl.className = "success";
+        form.reset();
+      } else {
+        responseEl.textContent = "Error submitting issue.";
+        responseEl.className = "error";
+      }
+    } catch (err) {
+      responseEl.textContent = "Network error.";
+      responseEl.className = "error";
+    }
+  });
+</script>
+
+</body>
+</html>
