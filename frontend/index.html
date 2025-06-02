@@ -15,13 +15,8 @@
       height: 100vh;
       margin: 0;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-    p {
-      margin-bottom: 20px;
-    }
+    h1 { font-size: 2rem; margin-bottom: 10px; }
+    p { margin-bottom: 20px; }
     button {
       padding: 12px 24px;
       font-size: 1.2rem;
@@ -54,13 +49,12 @@
       window.location.href = loginUrl;
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
 
-
+  <!-- ✅ Fixed script URL -->
+  <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.24/dist/aws-amplify.min.js"></script>
   <script>
     const Amplify = window.aws_amplify.Amplify;
     const Auth = window.aws_amplify.Auth;
-
 
     Amplify.configure({
       Auth: {
@@ -71,7 +65,5 @@
       }
     });
   </script>
-
-
 </body>
 </html>
