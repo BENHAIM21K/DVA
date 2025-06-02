@@ -56,7 +56,9 @@
   </script>
   <script src="https://unpkg.com/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
   <script>
-    const { Amplify } = window.aws_amplify;
+    const Amplify = window.aws_amplify.Amplify;
+    const Auth = window.aws_amplify.Auth;
+
 
     Amplify.configure({
       Auth: {
