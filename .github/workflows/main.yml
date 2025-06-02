@@ -11,6 +11,18 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    
+    - name: Create .env file from secrets
+      run: |
+        echo "REACT_APP_REGION=${{ secrets.REACT_APP_REGION }}" >> .env
+        echo "REACT_APP_USER_POOL_ID=${{ secrets.REACT_APP_USER_POOL_ID }}" >> .env
+        echo "REACT_APP_USER_POOL_CLIENT_ID=${{ secrets.REACT_APP_USER_POOL_CLIENT_ID }}" >> .env
+        echo "REACT_APP_IDENTITY_POOL_ID=${{ secrets.REACT_APP_IDENTITY_POOL_ID }}" >> .env
+        echo "REACT_APP_API_ENDPOINT=${{ secrets.REACT_APP_API_ENDPOINT }}" >> .env
+        echo "REACT_APP_REDIRECT_SIGNIN=${{ secrets.REACT_APP_REDIRECT_SIGNIN }}" >> .env
+        echo "REACT_APP_REDIRECT_SIGNOUT=${{ secrets.REACT_APP_REDIRECT_SIGNOUT }}" >> .env
+        echo "REACT_APP_DOMAIN=${{ secrets.REACT_APP_DOMAIN }}" >> .env
+
 
     - name: Zip frontend folder
       run: |

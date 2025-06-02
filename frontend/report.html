@@ -63,25 +63,25 @@
   <p id="response" class=""></p>
 </form>
 
-<!-- ✅ Correct Amplify script -->
+<!-- Load AWS Amplify + config -->
 <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.24/dist/aws-amplify.min.js"></script>
+<script src="config.js"></script>
 
 <script>
   const Amplify = window.aws_amplify.Amplify;
   const Auth = window.aws_amplify.Auth;
 
-  // ✅ Configure Amplify before anything else
   Amplify.configure({
     Auth: {
-      region: 'us-east-1',
-      userPoolId: 'us-east-1_DcUVYrv7t',
-      userPoolWebClientId: '59f9vispkosg7j2kstdc1p1kpl',
-      identityPoolId: 'us-east-1:e05c2888-ba1f-45af-8a05-e91bc00025ff',
+      region: CONFIG.REGION,
+      userPoolId: CONFIG.USER_POOL_ID,
+      userPoolWebClientId: CONFIG.USER_POOL_CLIENT_ID,
+      identityPoolId: CONFIG.IDENTITY_POOL_ID,
       oauth: {
-        domain: 'us-east-1dcuvyrv7t.auth.us-east-1.amazoncognito.com',
+        domain: CONFIG.DOMAIN,
         scope: ['email', 'openid', 'profile'],
-        redirectSignIn: 'https://www.dva-db-project.online/report.html',
-        redirectSignOut: 'https://www.dva-db-project.online/index.html',
+        redirectSignIn: CONFIG.REDIRECT_SIGNIN,
+        redirectSignOut: CONFIG.REDIRECT_SIGNOUT,
         responseType: 'code'
       }
     }
@@ -90,11 +90,9 @@
   const form = document.getElementById('issueForm');
   const responseEl = document.getElementById('response');
 
-  // ✅ Auth session exchange
   (async () => {
     try {
-      // Wait until code exchange is completed
-      await Auth.currentAuthenticatedUser(); // ⬅ This triggers exchange from ?code
+      await Auth.currentAuthenticatedUser();
       form.style.display = 'block';
     } catch (err) {
       console.error("❌ Auth error:", err);
@@ -106,7 +104,6 @@
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     const data = {
       title: form.title.value,
       description: form.description.value,
@@ -117,7 +114,7 @@
       const session = await Auth.currentSession();
       const token = session.getIdToken().getJwtToken();
 
-      const res = await fetch('https://2mfrt9ytye.execute-api.us-east-1.amazonaws.com/prod/submit', {
+      const res = await fetch(CONFIG.API_ENDPOINT, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -131,16 +128,15 @@
         responseEl.className = "success";
         form.reset();
       } else {
-        const errorText = await res.text();
-        console.error(errorText);
         responseEl.textContent = "❌ Error submitting issue.";
         responseEl.className = "error";
+        console.error(await res.text());
       }
 
     } catch (err) {
-      console.error("❌ Network error:", err);
       responseEl.textContent = "❌ Network error.";
       responseEl.className = "error";
+      console.error(err);
     }
   });
 </script>

@@ -37,33 +37,28 @@
   <p>Please log in to submit an issue.</p>
   <button onclick="login()">Login</button>
 
-  <script>
-    function login() {
-      const cognitoUrl = 'https://us-east-1dcuvyrv7t.auth.us-east-1.amazoncognito.com/login';
-      const clientId = '59f9vispkosg7j2kstdc1p1kpl';
-      const redirectUri = encodeURIComponent('https://www.dva-db-project.online/report.html');
-      const responseType = 'code';
-      const scope = 'email+openid+profile';
-
-      const loginUrl = `${cognitoUrl}?client_id=${clientId}&response_type=${responseType}&scope=${scope}&redirect_uri=${redirectUri}`;
-      window.location.href = loginUrl;
-    }
-  </script>
-
-  <!-- ✅ Fixed script URL -->
+  <!-- Load AWS Amplify + config -->
   <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.24/dist/aws-amplify.min.js"></script>
+  <script src="config.js"></script>
+
   <script>
     const Amplify = window.aws_amplify.Amplify;
     const Auth = window.aws_amplify.Auth;
 
     Amplify.configure({
       Auth: {
-        region: 'us-east-1',
-        userPoolId: 'us-east-1_DcUVYrv7t',
-        userPoolWebClientId: '59f9vispkosg7j2kstdc1p1kpl',
-        identityPoolId: 'us-east-1:e05c2888-ba1f-45af-8a05-e91bc00025ff'
+        region: CONFIG.REGION,
+        userPoolId: CONFIG.USER_POOL_ID,
+        userPoolWebClientId: CONFIG.USER_POOL_CLIENT_ID,
+        identityPoolId: CONFIG.IDENTITY_POOL_ID,
       }
     });
+
+    function login() {
+      const loginUrl = `https://${CONFIG.DOMAIN}/login?client_id=${CONFIG.USER_POOL_CLIENT_ID}&response_type=code&scope=email+openid+profile&redirect_uri=${CONFIG.REDIRECT_SIGNIN}`;
+      window.location.href = loginUrl;
+    }
   </script>
+
 </body>
 </html>
