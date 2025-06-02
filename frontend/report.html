@@ -17,7 +17,7 @@
       margin: auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       border-radius: 10px;
-      display: none; /* Hidden until authenticated */
+      display: none;
     }
     input, textarea, select {
       width: 100%;
@@ -36,12 +36,8 @@
     button:hover {
       background-color: #218838;
     }
-    .success {
-      color: green;
-    }
-    .error {
-      color: red;
-    }
+    .success { color: green; }
+    .error { color: red; }
   </style>
 </head>
 <body>
@@ -67,12 +63,14 @@
   <p id="response" class=""></p>
 </form>
 
-<!-- ✅ Correct Amplify CDN v4 -->
+<!-- ✅ Correct Amplify script -->
 <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.24/dist/aws-amplify.min.js"></script>
+
 <script>
   const Amplify = window.aws_amplify.Amplify;
   const Auth = window.aws_amplify.Auth;
 
+  // ✅ Configure Amplify before anything else
   Amplify.configure({
     Auth: {
       region: 'us-east-1',
@@ -85,28 +83,27 @@
         redirectSignIn: 'https://www.dva-db-project.online/report.html',
         redirectSignOut: 'https://www.dva-db-project.online/index.html',
         responseType: 'code'
+      }
     }
-  }
-});
+  });
 
   const form = document.getElementById('issueForm');
   const responseEl = document.getElementById('response');
 
-  // ✅ Auth flow to handle ?code=... and protect the form
+  // ✅ Auth session exchange
   (async () => {
     try {
-      await Auth.fetchAuthSession(); // handle code exchange
-      await Auth.currentSession();   // validate token
-      form.style.display = 'block';  // show form only when logged in
+      // Wait until code exchange is completed
+      await Auth.currentAuthenticatedUser(); // ⬅ This triggers exchange from ?code
+      form.style.display = 'block';
     } catch (err) {
       console.error("❌ Auth error:", err);
       alert("Session expired or not logged in. Redirecting...");
       await Auth.signOut();
-      window.location.href = "index.html"; // or your login page
+      window.location.href = "index.html";
     }
   })();
 
-  // ✅ Submit form
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
