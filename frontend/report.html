@@ -66,17 +66,17 @@
   <p id="response" class=""></p>
 </form>
 
-<!-- Load Amplify -->
-<script src="https://unpkg.com/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
+<!-- ✅ Load AWS Amplify from correct CDN -->
+<script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
 <script>
-  const { Auth, Amplify } = window.aws_amplify;
+  const Amplify = window.aws_amplify.Amplify;
+  const Auth = window.aws_amplify.Auth;
 
-  // 🔧 Configure Amplify Auth
   Amplify.configure({
     Auth: {
       region: 'us-east-1',
       userPoolId: 'us-east-1_DcUVYrv7t',
-      serPoolWebClientId: '59f9vispkosg7j2kstdc1p1kpl',
+      userPoolWebClientId: '59f9vispkosg7j2kstdc1p1kpl',
       identityPoolId: 'us-east-1:e05c2888-ba1f-45af-8a05-e91bc00025ff'
     }
   });
@@ -94,11 +94,9 @@
     };
 
     try {
-      // 🧠 Get current Cognito user's ID token
       const session = await Auth.currentSession();
       const token = session.getIdToken().getJwtToken();
 
-      // 📨 Call the API Gateway endpoint
       const res = await fetch('https://2mfrt9ytye.execute-api.us-east-1.amazonaws.com/prod/report', {
         method: 'POST',
         headers: {
