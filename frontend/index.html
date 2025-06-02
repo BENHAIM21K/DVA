@@ -54,6 +54,20 @@
       window.location.href = loginUrl;
     }
   </script>
+  <script src="https://unpkg.com/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
+  <script>
+    const { Amplify } = window.aws_amplify;
+
+    Amplify.configure({
+      Auth: {
+        region: 'us-east-1',
+        userPoolId: 'us-east-1_DcUVYrv7t',
+        userPoolWebClientId: '59f9vispkosg7j2kstdc1p1kpl',
+        identityPoolId: 'us-east-1:e05c2888-ba1f-45af-8a05-e91bc00025ff'
+      }
+    });
+  </script>
+
 
 </body>
 </html>
